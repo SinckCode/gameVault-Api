@@ -9,14 +9,17 @@ public func configure(_ app: Application) async throws {
     // app.middleware.use(FileMiddleware(publicDirectory: app.directory.publicDirectory))
 
     app.databases.use(DatabaseConfigurationFactory.mysql(
-        hostname: Environment.get("DATABASE_HOST") ?? "localhost",
-        port: Environment.get("DATABASE_PORT").flatMap(Int.init(_:)) ?? MySQLConfiguration.ianaPortNumber,
-        username: Environment.get("DATABASE_USERNAME") ?? "vapor_username",
-        password: Environment.get("DATABASE_PASSWORD") ?? "vapor_password",
-        database: Environment.get("DATABASE_NAME") ?? "vapor_database"
+        hostname: Environment.get("DATABASE_HOST") ?? "db",
+        port: Environment.get("DATABASE_PORT").flatMap(Int.init(_:)) ?? 3306,
+        username: Environment.get("DATABASE_USERNAME") ?? "gamesUsers",
+        password: Environment.get("DATABASE_PASSWORD") ?? "1234567",
+        database: Environment.get("DATABASE_NAME") ?? "gamevault_db",
+        tlsConfiguration: TLSConfiguration.forClient(certificateVerification: .none)
     ), as: .mysql)
 
-    app.migrations.add(CreateTodo())
+    app.migrations.add(CreateGame())
+    app.migrations.add(CreateCompany())
+
 
     // register routes
     try routes(app)
